@@ -1,0 +1,32 @@
+# General
+*.log
+*.cache
+*.env
+.env.*
+.env.local
+
+# Composer
+/vendor/
+/composer.lock
+
+# IDE files
+/.idea/
+/.vscode/
+/nbproject/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.swp
+*.swo
+
+# PHPUnit
+/phpunit.xml
+/phpunit.xml.dist
+
+# Logs and temporary files
+/logs/
+*.log
+/tmp/
+/*.temp
