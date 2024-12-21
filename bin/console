@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use App\Application;
+use Dotenv\Dotenv;
+
+// Load .env variables
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
+$dotenv->required(['WALLET_ADDRESS', 'PRIVATE_KEY']);
+print_r(getenv('WALLET_ADDRESS'));
+// Initialize and run the application
+$application = new Application();
+$application->run();
