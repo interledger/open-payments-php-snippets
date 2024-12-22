@@ -6,8 +6,27 @@ console-app/
 │   └── console
 ├── src/
 │   ├── Command/
-│   │   └── HelloCommand.php
-│   │   └──
+│   │   ├── Grant/
+│   │   │   └── GrantIncomingPayment.php
+│   │   ├── IncomingPayment/
+│   │   │   └── IncomingPaymentCreate.php
+│   │   │   └── IncomingPaymentGet.php
+│   │   │   └── IncomingPaymentList.php
+│   │   │   └── IncomingPaymentComplete.php
+│   │   └── OutgoingPayment/
+│   │   │   └──
+│   │   │   └──
+│   │   │   └──
+│   │   └── Quote/
+│   │   │   └──
+│   │   │   └──
+│   │   │   └──
+│   │   └── Token/
+│   │   │   └──
+│   │   │   └──
+│   │   └── WalletAddress/
+│   │   │   └──
+│   │   │   └──
 │   └── Application.php
 ├── tests/
 │   └── ApplicationTest.php

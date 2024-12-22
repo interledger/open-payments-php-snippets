@@ -6,7 +6,8 @@ use Symfony\Component\Console\Application as ConsoleApplication;
 use App\Command\Grant\GrantIncomingPayment;
 use App\Command\IncomingPayment\IncomingPaymentCreate;
 use App\Command\IncomingPayment\IncomingPaymentGet;
-//use App\Command\IncomingPayment\IncomingPaymentList;
+use App\Command\IncomingPayment\IncomingPaymentList;
+use App\Command\IncomingPayment\IncomingPaymentComplete;
 
 class Application
 {
@@ -18,7 +19,8 @@ class Application
         $application->add(new GrantIncomingPayment());
         $application->add(new IncomingPaymentCreate());
         $application->add(new IncomingPaymentGet());
-        //$application->add(new IncomingPaymentList());
+        $application->add(new IncomingPaymentList());
+        $application->add(new IncomingPaymentComplete());
 
         // Run the application
         $application->run();
