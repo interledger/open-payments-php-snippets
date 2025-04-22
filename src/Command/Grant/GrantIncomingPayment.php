@@ -5,9 +5,18 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use OpenPayments\AuthenticatedClient;
+//@! start chunk 1 | title=Import dependencies
+use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
+//@! end chunk 1
 
+/**
+ * Class GrantIncomingPayment
+ * @package App\Command\Grant
+ *
+ * This command is used to generate an incoming payment grant.
+ * It outputs the access token value needed to make the incoming payment request.
+ */
 class GrantIncomingPayment extends Command
 {
     protected static $defaultName = 'grant:ip';
@@ -24,37 +33,54 @@ class GrantIncomingPayment extends Command
         $WALLET_ADDRESS =  $_ENV['WALLET_ADDRESS'];
         $PRIVATE_KEY = $_ENV['PRIVATE_KEY'];
         $KEY_ID = $_ENV['KEY_ID'];
-        $output->writeln('WALLET_ADDRESS: '.$WALLET_ADDRESS);
-        $output->writeln('PRIVATE_KEY: '.$PRIVATE_KEY);
-        $output->writeln('KEY_ID: '.$KEY_ID);
 
+        //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
             $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
         );
-        $opClient = new AuthenticatedClient($config);
+        $opClient = new AuthClient($config);
+        //@! end chunk 2
 
-        $walletService = $opClient->walletAddress();
-        $wallet  = $walletService->get([
+        //@! start chunk 3 | title=Get wallet address information
+        $wallet = $opClient->walletAddress()->get([
             'url' => $config->getWalletAddressUrl()
         ]);
+        //@! end chunk 3
 
-        $grantService = $opClient->grant($wallet->getAuthServer());
-        $grantRequest = [
-            'access_token' => [
-                'access' => [
-                    [
-                        'type' => 'incoming-payment',
-                        'actions' => ['list', 'read', 'read-all', 'complete', 'create', ]
-                    ]
-                ]
+        //@! start chunk 4 | title=Request incoming payment grant
+        $grant = $opClient->grant()->request(
+            [
+                'url' => $wallet->authServer
             ],
-            'client' => $config->getWalletAddressUrl()
-        ];
-        $response = $grantService->request($grantRequest);
-
-        $output->writeln('GRANT request response: '.print_r($response, true));
-        $output->writeln('INCOMING_PAYMENT_GRANT: '.$response->access_token->value);
-
+            [
+                'access_token' => [
+                    'access' => [
+                        [
+                            'type' => 'incoming-payment',
+                            'actions' => ['read', 'complete', 'create', 'list' ]
+                        ]
+                    ]
+                ],
+                'client' => $config->getWalletAddressUrl()
+            ]
+        );
+        //@! end chunk 4
+    
+        //@! start chunk 5 | title=Check grant state
+        if($grant?->interact) {
+            throw new \Error('Expected non-interactive grant');
+        }
+        //OR
+        if($grant instanceof \OpenPayments\Models\PendingGrant) {
+            throw new \Error('Expected non-interactive grant');
+        }
+        //@! end chunk 5
+        
+        //@! start chunk 6 | title=Output
+        $output->writeln('GRANT response: '. print_r($grant, true));
+        $output->writeln('INCOMING_PAYMENT_GRANT: '.$grant->access_token->value);
+        $output->writeln("INCOMING_PAYMENT_ACCESS_TOKEN_MANAGE_URL = ", $grant->access_token->manage);
+        //@! end chunk 6
         return Command::SUCCESS;
     }
 }

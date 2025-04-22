@@ -6,8 +6,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use OpenPayments\AuthenticatedClient;
+//@! start chunk 1 | title=Import dependencies
+use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
+//@! end chunk 1
 
 class IncomingPaymentGet extends Command
 {
@@ -45,28 +47,26 @@ class IncomingPaymentGet extends Command
         $output->writeln('KEY_ID: '.$KEY_ID);
         $output->writeln('INCOMING_PAYMENT_GRANT_ACCESS_TOKEN: '.$INCOMING_PAYMENT_GRANT_ACCESS_TOKEN);
 
+        //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
             $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
         );
-        $opClient = new AuthenticatedClient($config);
-        $walletService = $opClient->walletAddress();
+        $opClient = new AuthClient($config);
+        //@! end chunk 2
 
-        $wallet  = $walletService->get([
-            'url' => $config->getWalletAddressUrl()
-        ]);
-        
-        $incomingPaymentService = $opClient->incomingPayment(
-            $wallet->getResourceServer(),
-            $INCOMING_PAYMENT_GRANT_ACCESS_TOKEN
+        //@! start chunk 3 | title=Get incoming payment
+        $incomingPayment = $opClient->incomingPayment()->get(
+            [
+                'access_token' => $INCOMING_PAYMENT_GRANT_ACCESS_TOKEN,
+                'url' => $INCOMING_PAYMENT_URL
+            ]
         );
-
-      
-        $incomingPayment = $incomingPaymentService->get($INCOMING_PAYMENT_URL);
+        //@! end chunk 3
         
+        //@! start chunk 4 | title=Output
         echo "GET INCOMING PAYMENT:<br><pre>".print_r($incomingPayment, true)."</pre>";
-
-       // $output->writeln('INCOMING_PAYMENT_GRANT: '.$newIncomingPayment->access_token->value);
-
+        //@! end chunk 4
+       
         return Command::SUCCESS;
     }
 }

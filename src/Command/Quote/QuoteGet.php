@@ -1,5 +1,5 @@
 <?php
-namespace App\Command\IncomingPayment;
+namespace App\Command\Quote;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -9,9 +9,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
 
-class IncomingPaymentList extends Command
+class QuoteGet extends Command
 {
-    protected static $defaultName = 'ip:list';
+    protected static $defaultName = 'quote:get';
 
     protected function configure(): void
     {
@@ -19,10 +19,17 @@ class IncomingPaymentList extends Command
             ->setDescription('Outputs a friendly greeting.')
             ->setHelp('This command allows you to output a greeting message...')
             ->addArgument(
-                'INCOMING_PAYMENT_GRANT_ACCESS_TOKEN',
+                'QUOTE_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
-                $_ENV['INCOMING_PAYMENT_GRANT_ACCESS_TOKEN'])
+                'The access token for the quote.',
+                $_ENV['QUOTE_GRANT_ACCESS_TOKEN'] ?? null
+            )
+            ->addArgument(
+                'QUOTE_URL',
+                InputArgument::OPTIONAL,
+                'The url of the quote.',
+                $_ENV['QUOTE_URL'] ?? ''
+            )
             ;
     }
 
@@ -31,35 +38,26 @@ class IncomingPaymentList extends Command
         $WALLET_ADDRESS =  $_ENV['WALLET_ADDRESS'];
         $PRIVATE_KEY = $_ENV['PRIVATE_KEY'];
         $KEY_ID = $_ENV['KEY_ID'];
-        $INCOMING_PAYMENT_GRANT_ACCESS_TOKEN = $input->getArgument('INCOMING_PAYMENT_GRANT_ACCESS_TOKEN');
+        $QUOTE_GRANT_ACCESS_TOKEN = $input->getArgument('QUOTE_GRANT_ACCESS_TOKEN');
+        $QUOTE_URL = $input->getArgument('QUOTE_URL');
         $output->writeln('WALLET_ADDRESS: '.$WALLET_ADDRESS);
         $output->writeln('PRIVATE_KEY: '.$PRIVATE_KEY);
         $output->writeln('KEY_ID: '.$KEY_ID);
-        $output->writeln('INCOMING_PAYMENT_GRANT_ACCESS_TOKEN: '.$INCOMING_PAYMENT_GRANT_ACCESS_TOKEN);
+        $output->writeln('QUOTE_URL: '.$QUOTE_URL);
 
         $config = new Config(
             $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
         );
         $opClient = new AuthClient($config);
-       
 
-        $wallet = $opClient->walletAddress()->get([
-            'url' => $config->getWalletAddressUrl()
-        ]);
-        
-        $incomingPaymentsList = $opClient->incomingPayment()->list(
+        $Quote = $opClient->quote()->get(
             [
-                'url' => $wallet->resourceServer,
-                'access_token' => $INCOMING_PAYMENT_GRANT_ACCESS_TOKEN
-            ],
-            [
-                'wallet-address' => $config->getWalletAddressUrl(),
-                'limit' => 10,
-                'page' => 1
+                'access_token' => $QUOTE_GRANT_ACCESS_TOKEN,
+                'url' => $QUOTE_URL
             ]
         );
 
-        echo "INCOMING PAYMENT LIST response:<br><pre>".print_r($incomingPaymentsList, true)."</pre>";
+        $output->writeln('GET QUOTE:<br><pre>'.print_r($Quote, true).'</pre>');
 
         return Command::SUCCESS;
     }
