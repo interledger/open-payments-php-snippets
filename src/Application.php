@@ -3,6 +3,7 @@
 namespace App;
 
 use Symfony\Component\Console\Application as ConsoleApplication;
+
 use App\Command\Grant\GrantIncomingPayment;
 use App\Command\Grant\GrantContinuation;
 use App\Command\Grant\CancelGrant;
@@ -13,6 +14,7 @@ use App\Command\IncomingPayment\IncomingPaymentList;
 use App\Command\IncomingPayment\IncomingPaymentComplete;
 
 use App\Command\Grant\GrantOutgoingPayment;
+use App\Command\Grant\GrantOutgoingPaymentInterval;
 use App\Command\OutgoingPayment\OutgoingPaymentCreate;
 use App\Command\OutgoingPayment\OutgoingPaymentCreateAmount;
 use App\Command\OutgoingPayment\OutgoingPaymentGet;
@@ -48,6 +50,7 @@ class Application
         $application->add(new IncomingPaymentComplete());
 
         $application->add(new GrantOutgoingPayment());
+        $application->add(new GrantOutgoingPaymentInterval());
         $application->add(new OutgoingPaymentCreate());
         $application->add(new OutgoingPaymentCreateAmount());
         $application->add(new OutgoingPaymentGet());

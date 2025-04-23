@@ -11,6 +11,13 @@ use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
 //@! end chunk 1
 
+/**
+ * Class GrantContinuation
+ * @package App\Command\Grant
+ *
+ * This command is used to generate an outgoing payment grant.
+ * It outputs the access token value needed to make the outgoing payment request.
+ */
 class GrantContinuation extends Command
 {
     protected static $defaultName = 'grant:continuation';
@@ -84,9 +91,10 @@ class GrantContinuation extends Command
         }
         //@! start chunk 4 | title=Check grant state
         
-        //@! start chunk 5 | title=Output
         $output->writeln('GRANT request response: '.print_r($grant, true));
+        //@! start chunk 5 | title=Output
         $output->writeln('OUTGOING_PAYMENT_GRANT_ACCES_TOKEN: '.$grant->access_token->value);
+        $output->writeln('OUTGOING_PAYMENT_ACCESS_TOKEN_MANAGE_URL: '.$grant->access_token->manage);
         //@! end chunk 5
         return Command::SUCCESS;
     }
