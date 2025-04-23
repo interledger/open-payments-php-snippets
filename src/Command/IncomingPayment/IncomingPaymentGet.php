@@ -11,6 +11,14 @@ use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
 //@! end chunk 1
 
+
+/**
+ * Class IncomingPaymentGet
+ * @package App\Command\IncomingPayment
+ *
+ * This command is used to get an incoming payment.
+ * It outputs the incoming payment object.
+ */
 class IncomingPaymentGet extends Command
 {
     protected static $defaultName = 'ip:get';
@@ -42,11 +50,7 @@ class IncomingPaymentGet extends Command
         $KEY_ID = $_ENV['KEY_ID'];
         $INCOMING_PAYMENT_GRANT_ACCESS_TOKEN = $input->getArgument('INCOMING_PAYMENT_GRANT_ACCESS_TOKEN');
         $INCOMING_PAYMENT_URL = $input->getArgument('INCOMING_PAYMENT_URL');
-        $output->writeln('WALLET_ADDRESS: '.$WALLET_ADDRESS);
-        $output->writeln('PRIVATE_KEY: '.$PRIVATE_KEY);
-        $output->writeln('KEY_ID: '.$KEY_ID);
-        $output->writeln('INCOMING_PAYMENT_GRANT_ACCESS_TOKEN: '.$INCOMING_PAYMENT_GRANT_ACCESS_TOKEN);
-
+       
         //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
             $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
@@ -64,7 +68,7 @@ class IncomingPaymentGet extends Command
         //@! end chunk 3
         
         //@! start chunk 4 | title=Output
-        echo "GET INCOMING PAYMENT:<br><pre>".print_r($incomingPayment, true)."</pre>";
+        $output->writeln('INCOMING PAYMENT: '.print_r($incomingPayment, true));
         //@! end chunk 4
        
         return Command::SUCCESS;

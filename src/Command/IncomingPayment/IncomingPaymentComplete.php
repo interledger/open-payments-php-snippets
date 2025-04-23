@@ -6,9 +6,18 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+//@! start chunk 1 | title=Import dependencies
 use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
+//@! end chunk 1
 
+/**
+ * Class IncomingPaymentComplete
+ * @package App\Command\IncomingPayment
+ *
+ * This command is used to complete an incoming payment.
+ * It outputs the incoming payment object.
+ */
 class IncomingPaymentComplete extends Command
 {
     protected static $defaultName = 'ip:complete';
@@ -40,24 +49,26 @@ class IncomingPaymentComplete extends Command
         $KEY_ID = $_ENV['KEY_ID'];
         $INCOMING_PAYMENT_GRANT_ACCESS_TOKEN = $input->getArgument('INCOMING_PAYMENT_GRANT_ACCESS_TOKEN');
         $INCOMING_PAYMENT_URL = $input->getArgument('INCOMING_PAYMENT_URL');
-        $output->writeln('WALLET_ADDRESS: '.$WALLET_ADDRESS);
-        $output->writeln('PRIVATE_KEY: '.$PRIVATE_KEY);
-        $output->writeln('KEY_ID: '.$KEY_ID);
-        $output->writeln('INCOMING_PAYMENT_GRANT_ACCESS_TOKEN: '.$INCOMING_PAYMENT_GRANT_ACCESS_TOKEN);
 
+        //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
             $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
         );
         $opClient = new AuthClient($config);
-        
+        //@! end chunk 2
+
+        //@! start chunk 3 | title=Complete incoming payment
         $incomingPayment = $opClient->incomingPayment()->complete(
             [
                 'access_token' => $INCOMING_PAYMENT_GRANT_ACCESS_TOKEN,
                 'url' => $INCOMING_PAYMENT_URL
             ]
         );
-     
-        echo "COMPLETE INCOMING PAYMENT:<br><pre>".print_r($incomingPayment, true)."</pre>";
+        //@! end chunk 3
+
+        //@! start chunk 4 | title=Output
+        $output->writeln('COMPLETE INCOMING PAYMENT: '.print_r($incomingPayment, true));
+        //@! end chunk 4
 
         return Command::SUCCESS;
     }

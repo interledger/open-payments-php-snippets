@@ -11,6 +11,13 @@ use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
 //@! end chunk 1
 
+/**
+ * Class PublicIncomingPaymentGet
+ * @package App\Command\IncomingPayment
+ *
+ * This command is used to get an incoming payment without authentication.
+ * It outputs the public incoming payment object.
+ */
 class PublicIncomingPaymentGet extends Command
 {
     protected static $defaultName = 'ip:get-public';
@@ -55,7 +62,7 @@ class PublicIncomingPaymentGet extends Command
         //@! end chunk 3
         
         //@! start chunk 4 | title=Output
-        echo "GET INCOMING PAYMENT:<br><pre>".print_r($incomingPayment, true)."</pre>";
+        $output->writeln('INCOMING PAYMENT: '.print_r($incomingPayment, true));
         //@! end chunk 4
        
         return Command::SUCCESS;

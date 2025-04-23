@@ -6,9 +6,18 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+//@! start chunk 1 | title=Import dependencies
 use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
+//@! end chunk 1
 
+/**
+ * Class IncomingPaymentCreate
+ * @package App\Command\IncomingPayment
+ *
+ * This command is used to create an incoming payment.
+ * It outputs the incoming payment object.
+ */
 class IncomingPaymentCreate extends Command
 {
     protected static $defaultName = 'ip:create';
@@ -33,40 +42,44 @@ class IncomingPaymentCreate extends Command
         $KEY_ID = $_ENV['KEY_ID'];
         $INCOMING_PAYMENT_GRANT_ACCESS_TOKEN = $input->getArgument('INCOMING_PAYMENT_GRANT_ACCESS_TOKEN');
        
+        //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
             $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
         );
         $opClient = new AuthClient($config);
+        //@! end chunk 2
 
         $wallet = $opClient->walletAddress()->get([
             'url' => $config->getWalletAddressUrl()
         ]);
 
-        $incomingPaymentRequest = [
-            'walletAddress' => $config->getWalletAddressUrl(),
-            // 'incomingAmount' => [
-            //     'value' => "130",
-            //     'assetCode' => 'USD',
-            //     'assetScale' => 2
-            // ],
-            'metadata' => [
-                'description' => 'Test php snippets transaction with $1,30 amount',
-                'externalRef' => 'INVOICE-'.uniqid()
-            ],
-            'expiresAt' => (new \DateTime())->add(new \DateInterval('PT59M'))->format("Y-m-d\TH:i:s.v\Z")
-        ];
-
+        //@! start chunk 3 | title=Create incoming payment
         $newIncomingPayment = $opClient->incomingPayment()->create(
             [
                 'url' => $wallet->resourceServer,
                 'access_token' => $INCOMING_PAYMENT_GRANT_ACCESS_TOKEN
             ],
-            $incomingPaymentRequest
+            [
+                'walletAddress' => $config->getWalletAddressUrl(),
+                'incomingAmount' => [
+                    'value' => "130",
+                    'assetCode' => 'USD',
+                    'assetScale' => 2
+                ],
+                'metadata' => [
+                    'description' => 'Test php snippets transaction with $1,30 amount',
+                    'externalRef' => 'INVOICE-'.uniqid()
+                ],
+                'expiresAt' => (new \DateTime())->add(new \DateInterval('PT59M'))->format("Y-m-d\TH:i:s.v\Z")
+            ]
         );
+        //@! end chunk 3
         
         echo "GRANT request response: ".print_r($newIncomingPayment, true);
 
-       $output->writeln('INCOMING_PAYMENT_URL: '.$newIncomingPayment->id);
+        //@! start chunk 4 | title=Output
+        $output->writeln('INCOMING_PAYMENT_URL: '.$newIncomingPayment->id);
+        //@! end chunk 4
 
         return Command::SUCCESS;
     }
