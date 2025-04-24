@@ -6,8 +6,18 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+//@! start chunk 1 | title=Import dependencies
 use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
+//@! end chunk 1
+
+/**
+ * Class QuoteGet
+ * @package App\Command\Quote
+ *
+ * This command is used to get a quote.
+ * It outputs the quote object.
+ */
 
 class QuoteGet extends Command
 {
@@ -16,8 +26,8 @@ class QuoteGet extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Outputs a friendly greeting.')
-            ->setHelp('This command allows you to output a greeting message...')
+            ->setDescription('This command is used to get a quote.')
+            ->setHelp('This command outputs the quote object')
             ->addArgument(
                 'QUOTE_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
@@ -40,25 +50,25 @@ class QuoteGet extends Command
         $KEY_ID = $_ENV['KEY_ID'];
         $QUOTE_GRANT_ACCESS_TOKEN = $input->getArgument('QUOTE_GRANT_ACCESS_TOKEN');
         $QUOTE_URL = $input->getArgument('QUOTE_URL');
-        $output->writeln('WALLET_ADDRESS: '.$WALLET_ADDRESS);
-        $output->writeln('PRIVATE_KEY: '.$PRIVATE_KEY);
-        $output->writeln('KEY_ID: '.$KEY_ID);
-        $output->writeln('QUOTE_URL: '.$QUOTE_URL);
 
+        //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
             $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
         );
         $opClient = new AuthClient($config);
+        //@! end chunk 2
 
-        $Quote = $opClient->quote()->get(
+        //@! start chunk 3 | title=Get quote
+        $quote = $opClient->quote()->get(
             [
                 'access_token' => $QUOTE_GRANT_ACCESS_TOKEN,
                 'url' => $QUOTE_URL
             ]
         );
-
-        $output->writeln('GET QUOTE:<br><pre>'.print_r($Quote, true).'</pre>');
-
+        //@! end chunk 3
+        //@! start chunk 4 | title=Output
+        $output->writeln('QUOTE: '.print_r($quote, true));
+        //@! end chunk 4
         return Command::SUCCESS;
     }
 }

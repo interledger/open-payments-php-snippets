@@ -6,8 +6,20 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+//@! start chunk 1 | title=Import dependencies
 use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
+//@! end chunk 1
+
+
+
+/**
+ * Class OutgoingPaymentList
+ * @package App\Command\OutgoingPayment
+ *
+ * This command is used to list outgoing payments.
+ * It outputs a list of outgoing payment objects.
+ */
 
 class OutgoingPaymentList extends Command
 {
@@ -16,8 +28,8 @@ class OutgoingPaymentList extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Outputs a friendly greeting.')
-            ->setHelp('This command allows you to output a greeting message...')
+            ->setDescription('This command is used to list outgoing payments.')
+            ->setHelp('This command outputs a list of outgoing payment objects.')
             ->addArgument(
                 'OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
@@ -32,21 +44,19 @@ class OutgoingPaymentList extends Command
         $PRIVATE_KEY = $_ENV['PRIVATE_KEY'];
         $KEY_ID = $_ENV['KEY_ID'];
         $OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN = $input->getArgument('OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN');
-        $output->writeln('WALLET_ADDRESS: '.$WALLET_ADDRESS);
-        $output->writeln('PRIVATE_KEY: '.$PRIVATE_KEY);
-        $output->writeln('KEY_ID: '.$KEY_ID);
-        $output->writeln('OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN: '.$OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN);
 
+        //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
             $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
         );
         $opClient = new AuthClient($config);
-        $walletService = $opClient->walletAddress();
+        //@! end chunk 2
 
-        $wallet  = $walletService->get([
+        $wallet  = $opClient->walletAddress()->get([
             'url' => $config->getWalletAddressUrl()
         ]);
-        
+
+        //@! start chunk 3 | title=List outgoing payments
         $outgoingPaymentList = $opClient->outgoingPayment()->list(
             [
                 'url' => $wallet->resourceServer,
@@ -58,10 +68,11 @@ class OutgoingPaymentList extends Command
                 'start'=> '96d964f0-3421-4df0-bb04-cb8d653bc571'
             ]
         );
-        
-        echo "OUTGOING response:<br><pre>".print_r($outgoingPaymentList, true)."</pre>";
+        //@! end chunk 3
 
-       // $output->writeln('OUTGOING_PAYMENT_GRANT: '.$newOutgoingPayment->access_token->value);
+        //@! start chunk 5 | title=Output
+        $output->writeln('OUTGOING PAYMENTS '.print_r($outgoingPaymentList, true));
+        //@! end chunk 5
 
         return Command::SUCCESS;
     }

@@ -6,9 +6,17 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+//@! start chunk 1 | title=Import dependencies
 use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
-
+//@! end chunk 1
+/**
+ * Class QuoteCreate
+ * @package App\Command\Quote
+ *
+ * This command is used to create a quote.
+ * It outputs the quote object.
+ */
 class QuoteCreate extends Command
 {
     protected static $defaultName = 'quote:create';
@@ -16,8 +24,8 @@ class QuoteCreate extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Outputs a friendly greeting.')
-            ->setHelp('This command allows you to output a greeting message...')
+            ->setDescription('This command is used to create a quote.')
+            ->setHelp('This command outputs the quote url.')
             ->addArgument(
                 'QUOTE_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
@@ -38,46 +46,41 @@ class QuoteCreate extends Command
         $KEY_ID = $_ENV['KEY_ID'];
         $QUOTE_GRANT_ACCESS_TOKEN = $input->getArgument('QUOTE_GRANT_ACCESS_TOKEN');
         $INCOMING_PAYMENT_URL = $input->getArgument('INCOMING_PAYMENT_URL');
-        $output->writeln('WALLET_ADDRESS: '.$WALLET_ADDRESS);
-        $output->writeln('PRIVATE_KEY: '.$PRIVATE_KEY);
-        $output->writeln('KEY_ID: '.$KEY_ID);
-        $output->writeln('QUOTE_GRANT_ACCESS_TOKEN: '.$QUOTE_GRANT_ACCESS_TOKEN);
-        $output->writeln('INCOMING_PAYMENT_URL: '.$INCOMING_PAYMENT_URL);
 
+        //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
             $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
         );
         $opClient = new AuthClient($config);
+        //@! end chunk 2
 
         $wallet = $opClient->walletAddress()->get([
             'url' => $config->getWalletAddressUrl()
         ]);
         
-        echo "wallet: ".print_r($wallet, true);
-        
-        $quoteRequest = [
-            'method' => "ilp",
-            'walletAddress'=> $wallet->id,
-            'receiver'=> $INCOMING_PAYMENT_URL,
-            'debitAmount' => [
-                'assetCode' => 'USD',
-                'assetScale' => 2,
-                'value' => "132",
-            ],
-        ];
-            
-        $newOutgoingPayment = $opClient->quote()->create(
+        //@! start chunk 3 | title=Create quote
+        $newQuote = $opClient->quote()->create(
             [
                 'url' => $wallet->resourceServer,
                 'access_token' => $QUOTE_GRANT_ACCESS_TOKEN
             ],
-            $quoteRequest
+            [
+                'method' => "ilp",
+                'walletAddress'=> $wallet->id,
+                'receiver'=> $INCOMING_PAYMENT_URL,
+                'debitAmount' => [
+                    'assetCode' => 'USD',
+                    'assetScale' => 2,
+                    'value' => "132",
+                ],
+            ]
         );
-        
-        echo "CREATE_QUOTE request response: ".print_r($newOutgoingPayment, true);
+        //@! end chunk 3
 
-        $output->writeln('QUOTE_URL: '.$newOutgoingPayment->id);
-
+        $output->writeln('QUOTE '.print_r($newQuote, true));
+        //@! start chunk 4 | title=Output
+        $output->writeln('QUOTE_URL '.$newQuote->id);
+        //@! end chunk 4
         return Command::SUCCESS;
     }
 }

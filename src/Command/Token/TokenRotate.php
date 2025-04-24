@@ -6,8 +6,18 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+//@! start chunk 1 | title=Import dependencies
 use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
+//@! end chunk 1
+
+/**
+ * Class TokenRotate
+ * @package App\Command\Token
+ *
+ * This command is used to rotate an access token.
+ * It outputs a new active token.
+ */
 
 class TokenRotate extends Command
 {
@@ -15,10 +25,9 @@ class TokenRotate extends Command
 
     protected function configure(): void
     {
-        //echo "<pre>".print_r($_ENV, true)."</pre>";
         $this
-            ->setDescription('Outputs a friendly greeting.')
-            ->setHelp('This command allows you to output a greeting message...')
+            ->setDescription('This command is used to rotate an access token.')
+            ->setHelp('This outputs a new active token.')
             ->addArgument(
                 'ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
@@ -45,19 +54,26 @@ class TokenRotate extends Command
         $output->writeln('ACCESS_TOKEN: '.$ACCESS_TOKEN);
         $output->writeln('TOKEN_MANAGE_URL: '.$TOKEN_MANAGE_URL);
 
+        //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
             $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
         );
         $opClient = new AuthClient($config);
+        //@! end chunk 2
 
-        $tokenResponse = $opClient->token()->rotate(
+        //@! start chunk 3 | title=Rotate token
+        $token = $opClient->token()->rotate(
             [
                 'access_token' => $ACCESS_TOKEN,
                 'url' => $TOKEN_MANAGE_URL
             ]
         );
+        //@! end chunk 3
         
-        echo "TOKEN RESPONSE:<br><pre>".print_r($tokenResponse, true)."</pre>";
+        //@! start chunk 4 | title=Output
+        $output->writeln('ACCESS_TOKEN: '.$token->value);
+        $output->writeln('MANAGE_URL: '.$token->manage);
+        //@! end chunk 4
 
         return Command::SUCCESS;
     }

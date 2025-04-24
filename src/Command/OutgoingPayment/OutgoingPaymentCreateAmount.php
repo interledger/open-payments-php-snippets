@@ -6,8 +6,18 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+//@! start chunk 1 | title=Import dependencies
 use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
+//@! end chunk 1
+
+/**
+ * Class OutgoingPaymentCreateAmount
+ * @package App\Command\OutgoingPayment
+ *
+ * This command is used to create an outgoing payment with a specific amount.
+ * It outputs the outgoing payment object.
+ */
 
 class OutgoingPaymentCreateAmount extends Command
 {
@@ -16,8 +26,8 @@ class OutgoingPaymentCreateAmount extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Outputs a friendly greeting.')
-            ->setHelp('This command allows you to output a greeting message...')
+            ->setDescription('This command is used to create an outgoing payment with a specific amount.')
+            ->setHelp('This command outputs the outgoing payment object.')
             ->addArgument(
                 'OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
@@ -39,50 +49,49 @@ class OutgoingPaymentCreateAmount extends Command
         $KEY_ID = $_ENV['KEY_ID'];
         $OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN = $input->getArgument('OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN');
         $INCOMING_PAYMENT_URL = $input->getArgument('INCOMING_PAYMENT_URL');
-        $output->writeln('WALLET_ADDRESS: '.$WALLET_ADDRESS);
-        $output->writeln('PRIVATE_KEY: '.$PRIVATE_KEY);
-        $output->writeln('KEY_ID: '.$KEY_ID);
-        $output->writeln('OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN: '.$OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN);
 
+        //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
             $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
         );
         $opClient = new AuthClient($config);
+        //@! end chunk 2
 
         $wallet  = $wallet = $opClient->walletAddress()->get([
             'url' => $config->getWalletAddressUrl()
         ]);
 
-        $outgoingPaymentRequest = [
-            'walletAddress' => $config->getWalletAddressUrl(),
-            'incomingPayment' => $INCOMING_PAYMENT_URL,
-            'debitAmount' => [
-                'value' => '121',
-                'assetCode' => 'USD',
-                'assetScale' => 2
-            ],
-            'metadata' => [
-                'description' => 'Test outgoing payment',
-                'reference' => '1234567890',
-                'invoiceId' => '1234567890',
-                'customData' => [
-                    'key1' => 'value1',
-                    'key2' => 'value2'
-                ]
-            ],
-        ];
-        
+        //@! start chunk 3 | title=Create outgoing payment with amount
         $newOutgoingPayment = $opClient->outgoingPayment()->create(
             [
                 'url' => $wallet->resourceServer,
                 'access_token' => $OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN
             ],
-            $outgoingPaymentRequest
+            [
+                'walletAddress' => $config->getWalletAddressUrl(),
+                'incomingPayment' => $INCOMING_PAYMENT_URL,
+                'debitAmount' => [
+                    'value' => '121',
+                    'assetCode' => 'USD',
+                    'assetScale' => 2
+                ],
+                'metadata' => [
+                    'description' => 'Test outgoing payment',
+                    'reference' => '1234567890',
+                    'invoiceId' => '1234567890',
+                    'customData' => [
+                        'key1' => 'value1',
+                        'key2' => 'value2'
+                    ]
+                ],
+            ]
         );
+        //@! end chunk 3
 
-        echo "GRANT outgoingPayment  create() response:<br><pre>".print_r($newOutgoingPayment, true)."</pre>";
-
-       $output->writeln('OUTGOING_PAYMENT_URL: '.$newOutgoingPayment->id);
+        $output->writeln('OUTGOING_PAYMENT '.print_r($newOutgoingPayment, true));
+        //@! start chunk 4 | title=Output
+        $output->writeln('OUTGOING_PAYMENT_URL '.$newOutgoingPayment->id);
+        //@! end chunk 4
 
         return Command::SUCCESS;
     }
