@@ -79,7 +79,7 @@ class GrantIncomingPayment extends Command
         $output->writeln('GRANT response: '. print_r($grant, true));
         //@! start chunk 6 | title=Output
         $output->writeln('INCOMING_PAYMENT_GRANT: '.$grant->access_token->value);
-        $output->writeln("INCOMING_PAYMENT_ACCESS_TOKEN_MANAGE_URL = ", $grant->access_token->manage);
+        $output->writeln("INCOMING_PAYMENT_ACCESS_TOKEN_MANAGE_URL = ". $grant->access_token->manage);
         //@! end chunk 6
         return Command::SUCCESS;
     }
