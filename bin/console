@@ -11,7 +11,7 @@ $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
 $dotenv->required(['WALLET_ADDRESS', 'PRIVATE_KEY']);
-print_r(getenv('WALLET_ADDRESS'));
+
 // Initialize and run the application
 $application = new Application();
 $application->run();
