@@ -25,8 +25,8 @@ class IncomingPaymentCreate extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Outputs a friendly greeting.')
-            ->setHelp('This command allows you to output a greeting message...')
+            ->setDescription('This command is used to create an incoming payment.')
+            ->setHelp('This command outputs the incoming payment object.')
             ->addArgument(
                 'INCOMING_PAYMENT_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
@@ -74,9 +74,8 @@ class IncomingPaymentCreate extends Command
             ]
         );
         //@! end chunk 3
-        
-        echo "GRANT request response: ".print_r($newIncomingPayment, true);
 
+        $output->writeln('INCOMING_PAYMENT '.print_r($newIncomingPayment, true));
         //@! start chunk 4 | title=Output
         $output->writeln('INCOMING_PAYMENT_URL: '.$newIncomingPayment->id);
         //@! end chunk 4

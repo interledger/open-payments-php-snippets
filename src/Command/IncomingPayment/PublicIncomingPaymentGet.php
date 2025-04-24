@@ -25,8 +25,8 @@ class PublicIncomingPaymentGet extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Outputs a friendly greeting.')
-            ->setHelp('This command allows you to output a greeting message...')
+            ->setDescription('OThis command is used to get an incoming payment without authentication.')
+            ->setHelp('This command outputs the public incoming payment object.')
             ->addArgument(
                 'INCOMING_PAYMENT_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,

@@ -25,8 +25,8 @@ class IncomingPaymentComplete extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Outputs a friendly greeting.')
-            ->setHelp('This command allows you to output a greeting message...')
+            ->setDescription('This command is used to complete an incoming payment.')
+            ->setHelp('This command outputs the incoming payment object.')
             ->addArgument(
                 'INCOMING_PAYMENT_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
