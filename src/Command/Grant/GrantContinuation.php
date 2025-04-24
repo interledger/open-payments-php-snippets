@@ -86,7 +86,7 @@ class GrantContinuation extends Command
             throw new \Error('Expected finalized grant. Received non-finalized grant.');
         }
         // OR
-        if($grant instanceof \OpenPayments\Models\PendingGrant) {
+        if(!$grant instanceof \OpenPayments\Models\Grant) {
             throw new \Error('Expected finalized grant. Received non-finalized grant.');
         }
         //@! start chunk 4 | title=Check grant state

@@ -88,7 +88,7 @@ class GrantOutgoingPaymentInterval extends Command
             throw new \Error('Expected interactive grant');
         }
         // OR
-        if($grant instanceof \OpenPayments\Models\Grant) { 
+        if(!$grant instanceof \OpenPayments\Models\PendingGrant) {
             throw new \Error('Expected interactive grant');
         }
         //@! end chunk 5

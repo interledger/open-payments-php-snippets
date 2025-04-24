@@ -71,7 +71,7 @@ class GrantIncomingPayment extends Command
             throw new \Error('Expected non-interactive grant');
         }
         //OR
-        if($grant instanceof \OpenPayments\Models\PendingGrant) {
+        if(!$grant instanceof \OpenPayments\Models\Grant) {
             throw new \Error('Expected non-interactive grant');
         }
         //@! end chunk 5

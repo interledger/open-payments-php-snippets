@@ -2,6 +2,7 @@
 namespace App\Command\Grant;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -24,7 +25,14 @@ class GrantOutgoingPayment extends Command
     {
         $this
             ->setDescription('Outputs an outgoing payment object, with the access_token value needed to make the outgoing payment request.')
-            ->setHelp('This command allows you to receive an outgoing payment grant');
+            ->setHelp('This command allows you to receive an outgoing payment grant')
+            ->addArgument(
+                'INCOMING_PAYMENT_URL',
+                InputArgument::OPTIONAL,
+                'The name of the person to greet.',
+                $_ENV['INCOMING_PAYMENT_URL']
+            );
+            
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -32,6 +40,7 @@ class GrantOutgoingPayment extends Command
         $WALLET_ADDRESS =  $_ENV['WALLET_ADDRESS'];
         $PRIVATE_KEY = $_ENV['PRIVATE_KEY'];
         $KEY_ID = $_ENV['KEY_ID'];
+        $INCOMING_PAYMENT_URL = $input->getArgument('INCOMING_PAYMENT_URL');
 
         //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
@@ -59,11 +68,11 @@ class GrantOutgoingPayment extends Command
                             'actions' => ['list', 'list-all', 'read', 'read-all','create'],
                             'identifier'=> $wallet->id,
                             'limits' => [
-                                'receiver' => 'https://ilp.interledger-test.dev/incoming-payments/3eb5f240-82a7-40d7-bc10-b1ca833dbb2e',
+                                'receiver' => $INCOMING_PAYMENT_URL,
                                 'debitAmount'=> [
                                     'assetCode'=> 'USD',
                                     'assetScale'=> 2,
-                                    'value'=> "132",
+                                    'value'=> "130",
                                 ]
                             ],
                         ]
@@ -84,6 +93,10 @@ class GrantOutgoingPayment extends Command
 
         //@! start chunk 5 | title=Check grant state
         if(!$grant?->interact) {
+            throw new \Error('Expected interactive grant');
+        }
+        //OR
+        if(!$grant instanceof \OpenPayments\Models\PendingGrant) {
             throw new \Error('Expected interactive grant');
         }
         //@! end chunk 5

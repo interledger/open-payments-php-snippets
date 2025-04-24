@@ -71,7 +71,7 @@ class QuoteCreate extends Command
                 'debitAmount' => [
                     'assetCode' => 'USD',
                     'assetScale' => 2,
-                    'value' => "132",
+                    'value' => "130",
                 ],
             ]
         );

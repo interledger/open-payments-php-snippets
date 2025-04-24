@@ -17,8 +17,8 @@ class FetchQuoteAndInitializePayment extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Outputs a friendly greeting.')
-            ->setHelp('This command allows you to output a greeting message...');
+            ->setDescription('Create IP grant, IP create, Quote Grant, quote create and initialize outgoing payment')
+            ->setHelp('This command will ouput IP details, Quote details and the interactive outgoing payment grant details');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -54,7 +54,6 @@ class FetchQuoteAndInitializePayment extends Command
             $ipGrantRequest
         );
     
-        //$output->writeln('GRANT request response: '. print_r($ipGrantResponse, true));
         $output->writeln('INCOMING_PAYMENT_GRANT: '.$ipGrantResponse->access_token->value);
         //IP REQUEST
         $incomingPaymentRequest = [

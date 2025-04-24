@@ -16,8 +16,8 @@ class FinalizePayment extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Outputs an outgoing payment object, with the access_token value needed to make the outgoing payment request.')
-            ->setHelp('This command allows you to receive an outgoing payment grant')
+            ->setDescription('Create a continuation grant and create an outgoing payment')
+            ->setHelp('This command allows you to create an outgoing payment grant and complete the payment')
             ->addArgument(
                 'CONTINUE_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
@@ -110,7 +110,7 @@ class FinalizePayment extends Command
             $outgoingPaymentRequest
         );
 
-        echo "GRANT outgoingPayment  create() response:<br><pre>".print_r($newOutgoingPayment, true)."</pre>";
+        echo "GRANT outgoingPayment  create() response:".print_r($newOutgoingPayment, true);
 
        $output->writeln('OUTGOING_PAYMENT_URL: '.$newOutgoingPayment->id);
 
