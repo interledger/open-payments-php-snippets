@@ -1,18 +1,19 @@
 # 📦 Open Payments Php Snippets
 
 
-This library provides PHP code snippets demonstrating usage of the [Open Payments Php Library](https://github.com/interledger/open-payments-php). It is intended for use with a  <a href="https://wallet.interledger-test.dev/" target="_blank">Test wallet</a>.
+This library provides PHP code snippets demonstrating usage of the [Open Payments Php Library](https://packagist.org/packages/interledger/open-payments-php). It is intended for use with a  <a href="https://wallet.interledger-test.dev/" target="_blank">Test wallet</a>.
 
 While everyone is welcome to use these examples as a reference, please note that you may need to adapt them to suit your specific application or environment.
 
+Github Repo: <a href="https://github.com/interledger/open-payments-php" target="_blank">Open Payments Php</a>
 
 ---
 
 ### Prerequisites
 
 - PHP 8.3
-- Sodium extension - needed by [Open Payments Php Library](https://github.com/interledger/open-payments-php) for generating keys
-- BCMath extension - needed by [Open Payments Php Library](https://github.com/interledger/open-payments-php) for big numbers comparisons
+- Sodium extension - needed by [Open Payments Php Library](https://packagist.org/packages/interledger/open-payments-php) for generating keys
+- BCMath extension - needed by [Open Payments Php Library](https://packagist.org/packages/interledger/open-payments-php) for big numbers comparisons
 - An active account on <a href="https://wallet.interledger-test.dev/" target="_blank">Test wallet</a>
 - A payment pointer associated with your account
 - Payment pointer keys should be generated (refer to [loading the private key](#loading-the-private-key))
