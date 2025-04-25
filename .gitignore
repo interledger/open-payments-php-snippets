@@ -2,7 +2,6 @@
 *.log
 *.cache
 *.env
-.env.*
 .env.local
 
 # Composer
