@@ -31,13 +31,13 @@ class OutgoingPaymentGet extends Command
             ->addArgument(
                 'OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
+                'Access token for the outgoing payment received from the outgoing payment grant.',
                 $_ENV['OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN'] ?? null
             )
             ->addArgument(
                 'OUTGOING_PAYMENT_URL',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
+                'The url of the outgoing payment.',
                 $_ENV['OUTGOING_PAYMENT_URL'] ??  null
             )
             ;
@@ -50,10 +50,6 @@ class OutgoingPaymentGet extends Command
         $KEY_ID = $_ENV['KEY_ID'];
         $OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN = $input->getArgument('OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN');
         $OUTGOING_PAYMENT_URL = $input->getArgument('OUTGOING_PAYMENT_URL');
-        $output->writeln('WALLET_ADDRESS: '.$WALLET_ADDRESS);
-        $output->writeln('PRIVATE_KEY: '.$PRIVATE_KEY);
-        $output->writeln('KEY_ID: '.$KEY_ID);
-        $output->writeln('OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN: '.$OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN);
 
         //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(

@@ -31,7 +31,7 @@ class PublicGetWalletAddressKeys extends Command
             ->addArgument(
                 'WALLET_ADDRESS',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
+                'The wallet address url.',
                 $_ENV['WALLET_ADDRESS'] ?? null
             );
     }

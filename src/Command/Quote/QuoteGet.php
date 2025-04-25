@@ -31,7 +31,7 @@ class QuoteGet extends Command
             ->addArgument(
                 'QUOTE_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
-                'The access token for the quote.',
+                'Access token for the quote received from the quote grant request.',
                 $_ENV['QUOTE_GRANT_ACCESS_TOKEN'] ?? null
             )
             ->addArgument(

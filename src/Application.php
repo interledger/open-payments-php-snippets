@@ -4,6 +4,8 @@ namespace App;
 
 use Symfony\Component\Console\Application as ConsoleApplication;
 
+use App\Command\ExtendedListCommand;
+
 use App\Command\Grant\GrantIncomingPayment;
 use App\Command\Grant\GrantContinuation;
 use App\Command\Grant\CancelGrant;
@@ -69,6 +71,8 @@ class Application
 
         $application->add(new FetchQuoteAndInitializePayment());
         $application->add(new FinalizePayment());
+
+        $application->add(new ExtendedListCommand());
 
         // Run the application
         $application->run();

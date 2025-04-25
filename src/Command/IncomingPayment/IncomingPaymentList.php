@@ -31,7 +31,7 @@ class IncomingPaymentList extends Command
             ->addArgument(
                 'INCOMING_PAYMENT_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
+                'Access token for the incoming payment received from the incoming payment grant.',
                 $_ENV['INCOMING_PAYMENT_GRANT_ACCESS_TOKEN'])
             ;
     }

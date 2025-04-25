@@ -21,25 +21,27 @@ class FinalizePayment extends Command
             ->addArgument(
                 'CONTINUE_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
-                'The value of CONTINUE_ACCESS_TOKEN',
+                'The value of CONTINUE_ACCESS_TOKEN received from the outgoint payment pending grant.',
                 $_ENV['CONTINUE_ACCESS_TOKEN']
             )
             ->addArgument(
                 'URL_WITH_INTERACT_REF',
                 InputArgument::OPTIONAL,
-                'The value of URL_WITH_INTERACT_REF',
+                'The value of URL_WITH_INTERACT_REF the url where we get redirected after approving the interaction.
+                ie: https://localhost/\?paymentId=123423\&hash=26oQzgzm6MluYVmUKfzyy1SaIOYb9wvKEe%2FOIGFmuq8%3D\&interact_ref=7cec4a98-c823-4f28-8c84-8d1d4f2685b3
+                note: make sure to esacape the & and ? with \& and \?',
                 $_ENV['URL_WITH_INTERACT_REF']
             )
             ->addArgument(
                 'CONTINUE_URI',
                 InputArgument::OPTIONAL,
-                'The value of CONTINUE_URI',
+                'The value of CONTINUE_URI received from the outgoint payment pending grant.',
                 $_ENV['CONTINUE_URI']
             )
             ->addArgument(
                 'QUOTE_URL',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
+                'The url of the quote.',
                 $_ENV['QUOTE_URL'] ?? null
             );
     }

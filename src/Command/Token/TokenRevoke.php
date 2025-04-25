@@ -30,13 +30,13 @@ class TokenRevoke extends Command
             ->addArgument(
                 'ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
+                'The acceess token we want to revoke.',
                 $_ENV['ACCESS_TOKEN'] ?? null
             )
             ->addArgument(
                 'TOKEN_MANAGE_URL',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
+                'The token manage url received when we created this (grant) token.',
                 $_ENV['TOKEN_MANAGE_URL'] ??  null
             );
     }

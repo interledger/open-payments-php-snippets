@@ -29,7 +29,7 @@ class GrantOutgoingPayment extends Command
             ->addArgument(
                 'INCOMING_PAYMENT_URL',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
+                'The url of the incoming payment that is being paid.',
                 $_ENV['INCOMING_PAYMENT_URL']
             );
             
@@ -55,6 +55,8 @@ class GrantOutgoingPayment extends Command
         ]);
         //@! end chunk 3
 
+        // See https://openpayments.dev/apis/auth-server/operations/post-request/
+
         //@! start chunk 4 | title=Request outgoing payment grant
         $grant = $opClient->grant()->request(
             [
@@ -68,7 +70,7 @@ class GrantOutgoingPayment extends Command
                             'actions' => ['list', 'list-all', 'read', 'read-all','create'],
                             'identifier'=> $wallet->id,
                             'limits' => [
-                                'receiver' => $INCOMING_PAYMENT_URL,
+                                'receiver' => $INCOMING_PAYMENT_URL, //optional
                                 'debitAmount'=> [
                                     'assetCode'=> 'USD',
                                     'assetScale'=> 2,

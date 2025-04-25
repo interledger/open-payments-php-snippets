@@ -33,7 +33,7 @@ class OutgoingPaymentList extends Command
             ->addArgument(
                 'OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
+                'Access token for the outgoing payment received from the outgoing payment grant.',
                 $_ENV['OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN'] ?? null)
             ;
     }

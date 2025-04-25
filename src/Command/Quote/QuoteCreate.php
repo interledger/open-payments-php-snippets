@@ -29,12 +29,12 @@ class QuoteCreate extends Command
             ->addArgument(
                 'QUOTE_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
-                $_ENV['QUOTE_GRANT_ACCESS_TOKEN'] ?? null) // Required argument
+                'Access token for the quote received from the quote grant request.',
+                $_ENV['QUOTE_GRANT_ACCESS_TOKEN'] ?? null)
             ->addArgument(
                 'INCOMING_PAYMENT_URL',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
+                'The url of the incoming payment for which we want to get a quote.',
                 $_ENV['INCOMING_PAYMENT_URL']
             );
     }

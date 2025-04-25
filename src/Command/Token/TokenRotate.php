@@ -31,13 +31,13 @@ class TokenRotate extends Command
             ->addArgument(
                 'ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
+                'The (expired) acceess token we want to rotate/refresh.',
                 $_ENV['ACCESS_TOKEN'] ?? null
             )
             ->addArgument(
                 'TOKEN_MANAGE_URL',
                 InputArgument::OPTIONAL,
-                'The name of the person to greet.',
+                'The token manage url received when we created this (grant) token.',
                 $_ENV['TOKEN_MANAGE_URL'] ??  null
             )
             ;
