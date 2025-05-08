@@ -67,11 +67,11 @@ class IncomingPaymentCreate extends Command
                 'walletAddress' => 'https://ilp.interledger-test.dev/my-sg-dollars',
                 'incomingAmount' => [
                     'value' => "130",
-                    'assetCode' => 'SGD',
+                    'assetCode' => 'USD',
                     'assetScale' => 2
                 ],
                 'metadata' => [
-                    'description' => 'Test inoming payment to sgd account',
+                    'description' => 'Test inoming payment to usd account',
                     'externalRef' => 'INVOICE-' . uniqid()
                 ],
                 'expiresAt' => (new \DateTime())->add(new \DateInterval('PT59M'))->format("Y-m-d\TH:i:s.v\Z")
