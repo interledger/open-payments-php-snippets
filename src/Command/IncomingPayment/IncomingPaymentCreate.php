@@ -64,7 +64,7 @@ class IncomingPaymentCreate extends Command
                 'access_token' => $INCOMING_PAYMENT_GRANT_ACCESS_TOKEN
             ],
             [
-                'walletAddress' => 'https://ilp.interledger-test.dev/my-sg-dollars',
+                'walletAddress' => $config->getWalletAddressUrl(),
                 'incomingAmount' => [
                     'value' => "130",
                     'assetCode' => 'USD',
