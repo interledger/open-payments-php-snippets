@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Command\Grant;
 
 use Symfony\Component\Console\Command\Command;
@@ -36,7 +37,9 @@ class GrantQuote extends Command
 
         //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
-            $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
+            $WALLET_ADDRESS,
+            $PRIVATE_KEY,
+            $KEY_ID
         );
         $opClient = new AuthClient($config);
         //@! end chunk 2
@@ -67,19 +70,15 @@ class GrantQuote extends Command
         //@! end chunk 4
 
         //@! start chunk 5 | title=Check grant state
-        if($grant?->interact) {
-            throw new \Error('Expected non-interactive grant');
-        }
-        //OR
-        if($grant instanceof \OpenPayments\Models\PendingGrant) {
+        if ($grant instanceof \OpenPayments\Models\PendingGrant) {
             throw new \Error('Expected non-interactive grant');
         }
         //@! end chunk 5
 
-        $output->writeln('GRANT request response: '.print_r($grant, true));
+        $output->writeln('GRANT request response: ' . print_r($grant, true));
         //@! start chunk 6 | title=Output
-        $output->writeln('QUOTE_ACCESS_TOKEN: '.$grant->access_token->value);
-        $output->writeln('QUOTE_ACCESS_TOKEN_MANAGE_URL: '.$grant->access_token->manage);
+        $output->writeln('QUOTE_ACCESS_TOKEN: ' . $grant->access_token->value);
+        $output->writeln('QUOTE_ACCESS_TOKEN_MANAGE_URL: ' . $grant->access_token->manage);
         //@! end chunk 6
 
 
