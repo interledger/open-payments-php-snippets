@@ -71,7 +71,7 @@ class IncomingPaymentCreate extends Command
                     'assetScale' => 2
                 ],
                 'metadata' => [
-                    'description' => 'Test inoming payment to usd account',
+                    'description' => 'Test php snippets transaction with $1,30 amount',
                     'externalRef' => 'INVOICE-' . uniqid()
                 ],
                 'expiresAt' => (new \DateTime())->add(new \DateInterval('PT59M'))->format("Y-m-d\TH:i:s.v\Z")
