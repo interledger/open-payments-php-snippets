@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Command\Grant;
 
 use Symfony\Component\Console\Command\Command;
@@ -52,7 +53,7 @@ class GrantContinuation extends Command
         $WALLET_ADDRESS =  $_ENV['WALLET_ADDRESS'];
         $PRIVATE_KEY = $_ENV['PRIVATE_KEY'];
         $KEY_ID = $_ENV['KEY_ID'];
-       
+
 
         $CONTINUE_ACCESS_TOKEN = $input->getArgument('CONTINUE_ACCESS_TOKEN');
         $URL_WITH_INTERACT_REF = $input->getArgument('URL_WITH_INTERACT_REF');
@@ -64,7 +65,9 @@ class GrantContinuation extends Command
 
         //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
-            $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
+            $WALLET_ADDRESS,
+            $PRIVATE_KEY,
+            $KEY_ID
         );
         $opClient = new AuthClient($config);
         //@! end chunk 2
@@ -72,31 +75,26 @@ class GrantContinuation extends Command
         //@! start chunk 3 | title=Continue grant
         $grant = $opClient->grant()->continue(
             [
-                'access_token'=> $CONTINUE_ACCESS_TOKEN,
+                'access_token' => $CONTINUE_ACCESS_TOKEN,
                 'url' => $CONTINUE_URI
             ],
             [
-                'interact_ref'=> $interactRef,
+                'interact_ref' => $interactRef,
             ]
         );
         //@! end chunk 3
 
-        ////@! start chunk 4 | title=Check grant state
-        if(!$grant?->access_token) {
-            throw new \Error('Expected finalized grant. Received non-finalized grant.');
-        }
-        // OR
-        if(!$grant instanceof \OpenPayments\Models\Grant) {
+        //@! start chunk 4 | title=Check grant state
+        if (!$grant instanceof \OpenPayments\Models\Grant) {
             throw new \Error('Expected finalized grant. Received non-finalized grant.');
         }
         //@! start chunk 4 | title=Check grant state
-        
-        $output->writeln('GRANT request response: '.print_r($grant, true));
+
+        $output->writeln('GRANT request response: ' . print_r($grant, true));
         //@! start chunk 5 | title=Output
-        $output->writeln('OUTGOING_PAYMENT_GRANT_ACCES_TOKEN: '.$grant->access_token->value);
-        $output->writeln('OUTGOING_PAYMENT_ACCESS_TOKEN_MANAGE_URL: '.$grant->access_token->manage);
+        $output->writeln('OUTGOING_PAYMENT_GRANT_ACCES_TOKEN: ' . $grant->access_token->value);
+        $output->writeln('OUTGOING_PAYMENT_ACCESS_TOKEN_MANAGE_URL: ' . $grant->access_token->manage);
         //@! end chunk 5
         return Command::SUCCESS;
     }
 }
-

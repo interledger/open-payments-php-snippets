@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Command\Grant;
 
 use Symfony\Component\Console\Command\Command;
@@ -32,7 +33,6 @@ class GrantOutgoingPayment extends Command
                 'The url of the incoming payment that is being paid.',
                 $_ENV['INCOMING_PAYMENT_URL']
             );
-            
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -44,7 +44,9 @@ class GrantOutgoingPayment extends Command
 
         //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
-            $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
+            $WALLET_ADDRESS,
+            $PRIVATE_KEY,
+            $KEY_ID
         );
         $opClient = new AuthClient($config);
         //@! end chunk 2
@@ -67,26 +69,26 @@ class GrantOutgoingPayment extends Command
                     'access' => [
                         [
                             'type' => 'outgoing-payment',
-                            'actions' => ['list', 'list-all', 'read', 'read-all','create'],
-                            'identifier'=> $wallet->id,
+                            'actions' => ['list', 'list-all', 'read', 'read-all', 'create'],
+                            'identifier' => $wallet->id,
                             'limits' => [
                                 'receiver' => $INCOMING_PAYMENT_URL, //optional
-                                'debitAmount'=> [
-                                    'assetCode'=> 'USD',
-                                    'assetScale'=> 2,
-                                    'value'=> "130",
+                                'debitAmount' => [
+                                    'assetCode' => 'USD',
+                                    'assetScale' => 2,
+                                    'value' => "130",
                                 ]
                             ],
                         ]
                     ]
                 ],
                 'client' => $config->getWalletAddressUrl(),
-                'interact'=> [
-                    'start'=> ["redirect"],
-                    'finish'=>[
-                      'method'=> "redirect",
-                      'uri'=> 'https://localhost/?paymentId=123423',
-                      'nonce'=> "1234567890",
+                'interact' => [
+                    'start' => ["redirect"],
+                    'finish' => [
+                        'method' => "redirect",
+                        'uri' => 'https://localhost/?paymentId=123423',
+                        'nonce' => "1234567890",
                     ],
                 ]
             ]
@@ -94,20 +96,16 @@ class GrantOutgoingPayment extends Command
         //@! end chunk 4
 
         //@! start chunk 5 | title=Check grant state
-        if(!$grant?->interact) {
-            throw new \Error('Expected interactive grant');
-        }
-        //OR
-        if(!$grant instanceof \OpenPayments\Models\PendingGrant) {
+        if (!$grant instanceof \OpenPayments\Models\PendingGrant) {
             throw new \Error('Expected interactive grant');
         }
         //@! end chunk 5
 
-        $output->writeln('GRANT request response: '.print_r($grant, true));
+        $output->writeln('GRANT request response: ' . print_r($grant, true));
         //@! start chunk 6 | title=Output 
-        $output->writeln('Please interact at the following URL: '.$grant->interact->redirect);
-        $output->writeln('CONTINUE_ACCESS_TOKEN = '.$grant->continue->access_token->value);
-        $output->writeln('CONTINUE_URI = '.$grant->continue->uri);
+        $output->writeln('Please interact at the following URL: ' . $grant->interact->redirect);
+        $output->writeln('CONTINUE_ACCESS_TOKEN = ' . $grant->continue->access_token->value);
+        $output->writeln('CONTINUE_URI = ' . $grant->continue->uri);
         //@! end chunk 6
         return Command::SUCCESS;
     }

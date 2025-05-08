@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Command\Grant;
 
 use Symfony\Component\Console\Command\Command;
@@ -36,7 +37,9 @@ class GrantIncomingPayment extends Command
 
         //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
-            $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
+            $WALLET_ADDRESS,
+            $PRIVATE_KEY,
+            $KEY_ID
         );
         $opClient = new AuthClient($config);
         //@! end chunk 2
@@ -57,7 +60,7 @@ class GrantIncomingPayment extends Command
                     'access' => [
                         [
                             'type' => 'incoming-payment',
-                            'actions' => ['read', 'complete', 'create', 'list' ]
+                            'actions' => ['read', 'complete', 'create', 'list']
                         ]
                     ]
                 ],
@@ -65,21 +68,17 @@ class GrantIncomingPayment extends Command
             ]
         );
         //@! end chunk 4
-    
+
         //@! start chunk 5 | title=Check grant state
-        if($grant?->interact) {
-            throw new \Error('Expected non-interactive grant');
-        }
-        //OR
-        if(!$grant instanceof \OpenPayments\Models\Grant) {
+        if (!$grant instanceof \OpenPayments\Models\Grant) {
             throw new \Error('Expected non-interactive grant');
         }
         //@! end chunk 5
-        
-        $output->writeln('GRANT response: '. print_r($grant, true));
+
+        $output->writeln('GRANT response: ' . print_r($grant, true));
         //@! start chunk 6 | title=Output
-        $output->writeln('INCOMING_PAYMENT_GRANT: '.$grant->access_token->value);
-        $output->writeln("INCOMING_PAYMENT_ACCESS_TOKEN_MANAGE_URL = ". $grant->access_token->manage);
+        $output->writeln('INCOMING_PAYMENT_GRANT: ' . $grant->access_token->value);
+        $output->writeln("INCOMING_PAYMENT_ACCESS_TOKEN_MANAGE_URL = " . $grant->access_token->manage);
         //@! end chunk 6
         return Command::SUCCESS;
     }
