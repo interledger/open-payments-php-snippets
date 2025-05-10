@@ -12,15 +12,15 @@ use OpenPayments\AuthClient;
 use OpenPayments\Config\Config;
 //@! end chunk 1
 /**
- * Class QuoteCreate
+ * Class QuoteCreateReceiveAmount
  * @package App\Command\Quote
  *
  * This command is used to create a quote.
  * It outputs the quote object.
  */
-class QuoteCreate extends Command
+class QuoteCreateReceiveAmount extends Command
 {
-    protected static $defaultName = 'quote:create';
+    protected static $defaultName = 'quote:create-receive-amount';
 
     protected function configure(): void
     {
@@ -58,28 +58,35 @@ class QuoteCreate extends Command
         $opClient = new AuthClient($config);
         //@! end chunk 2
 
+        //@! start chunk 3 | title=Get wallet address information
         $wallet = $opClient->walletAddress()->get([
             'url' => $config->getWalletAddressUrl()
         ]);
+        //@! end chunk 3
 
-        //@! start chunk 3 | title=Create quote
+        //@! start chunk 4 | title=Create quote with receive amount
         $newQuote = $opClient->quote()->create(
             [
                 'url' => $wallet->resourceServer,
-                'access_token' => $QUOTE_GRANT_ACCESS_TOKEN,
+                'access_token' => $QUOTE_GRANT_ACCESS_TOKEN
             ],
             [
                 'method' => "ilp",
                 'walletAddress' => $wallet->id,
                 'receiver' => $INCOMING_PAYMENT_URL,
+                'receiveAmount' => [
+                    'assetCode' => $wallet->assetCode,
+                    'assetScale' => $wallet->assetScale,
+                    'value' => "130",
+                ],
             ]
         );
-        //@! end chunk 3
+        //@! end chunk 4
 
         $output->writeln('QUOTE ' . print_r($newQuote, true));
-        //@! start chunk 4 | title=Output
+        //@! start chunk 5 | title=Output
         $output->writeln('QUOTE_URL ' . $newQuote->id);
-        //@! end chunk 4
+        //@! end chunk 5
         return Command::SUCCESS;
     }
 }

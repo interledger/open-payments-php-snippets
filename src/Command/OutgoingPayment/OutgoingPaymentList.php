@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Command\OutgoingPayment;
 
 use Symfony\Component\Console\Command\Command;
@@ -34,8 +35,9 @@ class OutgoingPaymentList extends Command
                 'OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN',
                 InputArgument::OPTIONAL,
                 'Access token for the outgoing payment received from the outgoing payment grant.',
-                $_ENV['OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN'] ?? null)
-            ;
+                $_ENV['OUTGOING_PAYMENT_GRANT_ACCESS_TOKEN'] ?? null
+            )
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -47,7 +49,9 @@ class OutgoingPaymentList extends Command
 
         //@! start chunk 2 | title=Initialize Open Payments client
         $config = new Config(
-            $WALLET_ADDRESS, $PRIVATE_KEY, $KEY_ID
+            $WALLET_ADDRESS,
+            $PRIVATE_KEY,
+            $KEY_ID
         );
         $opClient = new AuthClient($config);
         //@! end chunk 2
@@ -65,14 +69,14 @@ class OutgoingPaymentList extends Command
             [
                 'wallet-address' => $config->getWalletAddressUrl(),
                 'first' => 3,
-                'start'=> '96d964f0-3421-4df0-bb04-cb8d653bc571'
+                'start' => '96d964f0-3421-4df0-bb04-cb8d653bc571'
             ]
         );
         //@! end chunk 3
 
-        //@! start chunk 5 | title=Output
-        $output->writeln('OUTGOING PAYMENTS '.print_r($outgoingPaymentList, true));
-        //@! end chunk 5
+        //@! start chunk 4 | title=Output
+        $output->writeln('OUTGOING PAYMENTS ' . print_r($outgoingPaymentList, true));
+        //@! end chunk 4
 
         return Command::SUCCESS;
     }

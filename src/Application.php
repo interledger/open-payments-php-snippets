@@ -24,6 +24,8 @@ use App\Command\OutgoingPayment\OutgoingPaymentList;
 
 use App\Command\Grant\GrantQuote;
 use App\Command\Quote\QuoteCreate;
+use App\Command\Quote\QuoteCreateDebitAmount;
+use App\Command\Quote\QuoteCreateReceiveAmount;
 use App\Command\Quote\QuoteGet;
 
 use App\Command\Token\TokenRotate;
@@ -60,12 +62,13 @@ class Application
 
         $application->add(new GrantQuote());
         $application->add(new QuoteCreate());
+        $application->add(new QuoteCreateDebitAmount());
+        $application->add(new QuoteCreateReceiveAmount());
         $application->add(new QuoteGet());
 
         $application->add(new TokenRotate());
         $application->add(new TokenRevoke());
-        
-        
+
         $application->add(new GrantContinuation());
         $application->add(new CancelGrant());
 
